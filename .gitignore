@@ -17,6 +17,7 @@ build/
 # Executables
 vector_add
 actionlint
+act
 
 # Logs
 *.log

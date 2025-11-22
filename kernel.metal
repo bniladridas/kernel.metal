@@ -1,4 +1,7 @@
-#include &lt;metal_stdlib&gt;
+// SPDX-License-Identifier: LicenseRef-KERNELMETAL-NC
+// Copyright (c) 2025 KERNEL.METAL (harpertoken)
+
+#include <metal_stdlib>
 using namespace metal;
 
 // This is the compute kernel function that performs vector addition on the GPU.

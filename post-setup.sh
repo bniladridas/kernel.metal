@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: LicenseRef-KERNELMETAL-NC
+# Copyright (c) 2025 KERNEL.METAL (harpertoken)
+
 #!/bin/bash
 
 # Post-setup script: Runs after environment/VM is created and ready

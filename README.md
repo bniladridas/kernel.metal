@@ -72,3 +72,21 @@ References
 - [Apple Metal Documentation](https://developer.apple.com/metal/)
 - [Metal Shading Language Guide](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf)
 - [GPU Compute Best Practices](https://developer.apple.com/documentation/metal/performing_calculations_on_a_gpu)
+
+## 📄 License & Usage FAQ
+
+**Can I use this software in my open source project?**  
+✔ Yes, as long as it is **non-commercial** and credit is maintained.
+
+**Can I modify the code for personal or academic use?**  
+✔ Yes — document any changes.
+
+**Can I publish a modified version on GitHub?**  
+✔ Yes, but still **non-commercial only** and must keep the license.
+
+**I want to use this in a product or service that earns money.**  
+➡ You must request commercial permission.  
+Create a **Commercial License Request** issue.
+
+**Does the author provide warranties?**  
+❌ No, the software is “as-is”. Contributor & Public FAQ (OPTIONAL — add to README)

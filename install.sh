@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: LicenseRef-KERNELMETAL-NC
+# Copyright (c) 2025 KERNEL.METAL (harpertoken)
+
 #!/bin/bash
 
 # Installation script for KERNEL.METAL project dependencies

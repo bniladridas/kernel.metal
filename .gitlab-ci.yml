@@ -8,6 +8,7 @@ build:
     - macos
   script:
     - swiftc main.swift -framework Metal -o vector_add
+    - chmod +x vector_add
 
 test:
   stage: test

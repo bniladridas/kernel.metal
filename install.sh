@@ -12,5 +12,8 @@ tar -xzf act.tar.gz
 chmod +x act
 rm act.tar.gz
 
-echo "Installation complete. Tools: actionlint, act"
-echo "Note: Ensure Docker Desktop is installed and running for act to work."
+echo "Installing gitlab-ci-local for local GitLab CI testing..."
+npm install -g gitlab-ci-local
+
+echo "Installation complete. Tools: actionlint, act, gitlab-ci-local"
+echo "Note: Ensure Docker Desktop is installed and running for act to work. Node.js is required for gitlab-ci-local."

@@ -19,7 +19,7 @@ jobs:
           FILE_TYPES="*.ts *.tsx *.js *.jsx *.py *.cpp *.c *.h *.sh *.go *.rs *.java *.rb"
           
           # Find changed files in the PR with the above extensions
-          CHANGED_FILES=$(git diff --name-only HEAD^ | grep -E "$(echo $FILE_TYPES | sed 's/ /|/g')" | || true)
+          CHANGED_FILES=$(git diff --name-only HEAD^ | grep -E "${FILE_TYPES// /|}" || true)
           
           if [ -z "$CHANGED_FILES" ]; then
             echo "No relevant files changed."

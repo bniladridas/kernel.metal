@@ -15,5 +15,8 @@ rm act.tar.gz
 echo "Installing gitlab-ci-local for local GitLab CI testing..."
 npm install -g gitlab-ci-local
 
-echo "Installation complete. Tools: actionlint, act, gitlab-ci-local"
+echo "Upgrading CircleCI CLI..."
+brew upgrade circleci
+
+echo "Installation complete. Tools: actionlint, act, gitlab-ci-local, circleci"
 echo "Note: Ensure Docker Desktop is installed and running for act to work. Node.js is required for gitlab-ci-local."

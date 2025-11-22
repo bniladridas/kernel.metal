@@ -33,3 +33,4 @@ act
 
 # CI
 .gitlab-ci.yml.artifacts/
+.gitlab-ci-local/

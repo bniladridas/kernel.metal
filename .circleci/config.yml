@@ -14,6 +14,10 @@ jobs:
     steps:
       # Checkout the code
       - checkout
+      # Run post-setup script after VM is ready
+      - run:
+          name: Post-setup
+          command: ./post-setup.sh
       # Check if key files exist
       - run:
           name: Check file existence

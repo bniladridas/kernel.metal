@@ -1,6 +1,8 @@
 Metal Vector Addition Compute Kernel
 ========================================
 
+CircleCI project slug: MTmTNB5kfgokxu42MvEt1D/NKE1QKfsTZx2mgp5FQ4YKx
+
 Performing large-scale vector operations on the CPU can be slow and inefficient for data-intensive tasks. Utilizing the GPU via Metal compute shaders on Apple Silicon enables parallel processing, significantly accelerating computations like vector addition.
 
 Recommendation

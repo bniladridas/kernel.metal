@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SPDX-License-Identifier: LicenseRef-KERNELMETAL-NC
+# SPDX-License-Identifier: MIT
 # Copyright (c) 2025 KERNEL.METAL (harpertoken)
 
 # autofix-spdx.sh

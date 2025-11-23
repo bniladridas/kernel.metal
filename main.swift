@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: LicenseRef-KERNELMETAL-NC
+// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 KERNEL.METAL (harpertoken)
 
 import Metal
@@ -22,8 +22,10 @@ kernel void vector_add(
     device const float* A [[buffer(0)]],
     device const float* B [[buffer(1)]],
     device float* C [[buffer(2)]],
+    constant uint &count [[buffer(3)]],
     uint id [[thread_position_in_grid]]
 ) {
+    if (id >= count) return;
     C[id] = A[id] + B[id];
 }
 """
@@ -50,10 +52,10 @@ do {
 }
 
 // Define the problem size: 1,000,000 floats
-let size = 1_000_000
+var count: UInt32 = 1_000_000
 
 // Calculate buffer size in bytes
-let bufferSize = size * MemoryLayout<Float>.size
+let bufferSize = Int(count) * MemoryLayout<Float>.size
 
 // Create three buffers: A, B, C
 // Using .storageModeShared so CPU and GPU can access them
@@ -63,11 +65,16 @@ guard let bufferA = device.makeBuffer(length: bufferSize, options: .storageModeS
     fatalError("Failed to create buffers")
 }
 
+// Create buffer for element count
+guard let countBuffer = device.makeBuffer(bytes: &count, length: MemoryLayout<UInt32>.size, options: .storageModeShared) else {
+    fatalError("Failed to create count buffer")
+}
+
 // Fill input buffers A and B with data
 // A[i] = i, B[i] = i * 2, so C[i] should be i + 2*i = 3*i
-let pointerA = bufferA.contents().bindMemory(to: Float.self, capacity: size)
-let pointerB = bufferB.contents().bindMemory(to: Float.self, capacity: size)
-for i in 0..<size {
+let pointerA = bufferA.contents().bindMemory(to: Float.self, capacity: Int(count))
+let pointerB = bufferB.contents().bindMemory(to: Float.self, capacity: Int(count))
+for i in 0..<Int(count) {
     pointerA[i] = Float(i)
     pointerB[i] = Float(i * 2)
 }
@@ -94,12 +101,15 @@ computeEncoder.setComputePipelineState(pipelineState)
 computeEncoder.setBuffer(bufferA, offset: 0, index: 0)
 computeEncoder.setBuffer(bufferB, offset: 0, index: 1)
 computeEncoder.setBuffer(bufferC, offset: 0, index: 2)
+computeEncoder.setBuffer(countBuffer, offset: 0, index: 3)
 
 // Define the thread execution configuration
-// threadsPerGrid: total number of threads to execute (1,000,000 in 1D)
-let threadsPerGrid = MTLSize(width: size, height: 1, depth: 1)
-// threadsPerThreadgroup: number of threads per threadgroup (256 threads)
-let threadsPerThreadgroup = MTLSize(width: 256, height: 1, depth: 1)
+// Compute optimal dispatch size: round up to multiple of threadgroup size
+let tgSize = 256
+let numThreads = ((Int(count) + tgSize - 1) / tgSize) * tgSize
+let threadsPerGrid = MTLSize(width: numThreads, height: 1, depth: 1)
+// threadsPerThreadgroup: number of threads per threadgroup
+let threadsPerThreadgroup = MTLSize(width: tgSize, height: 1, depth: 1)
 
 // Dispatch the threads to execute the kernel
 computeEncoder.dispatchThreads(threadsPerGrid, threadsPerThreadgroup: threadsPerThreadgroup)
@@ -107,22 +117,26 @@ computeEncoder.dispatchThreads(threadsPerGrid, threadsPerThreadgroup: threadsPer
 // End the compute encoding
 computeEncoder.endEncoding()
 
+// Measure execution time
+let start = Date()
 // Commit the command buffer to execute on the GPU
 commandBuffer.commit()
 // Wait for the GPU to finish execution
 commandBuffer.waitUntilCompleted()
+let elapsed = Date().timeIntervalSince(start)
+print("Elapsed (s): \(elapsed)")
 
 // Read back the results from buffer C
-let pointerC = bufferC.contents().bindMemory(to: Float.self, capacity: size)
+let pointerC = bufferC.contents().bindMemory(to: Float.self, capacity: Int(count))
 
 // Print sample output to console
 print("Sample results:")
-// Print first 10 elements
-for i in 0..<10 {
+// Print first 5 elements
+for i in 0..<5 {
     print("C[\(i)] = \(pointerC[i])")
 }
 print("...")
-// Print last 10 elements
-for i in (size-10)..<size {
+// Print last 5 elements
+for i in (Int(count)-5)..<Int(count) {
     print("C[\(i)] = \(pointerC[i])")
 }

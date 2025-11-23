@@ -1,7 +1,7 @@
 {
   "name": "kernel.metal",
   "copyright": "Copyright (c) 2025 KERNEL.METAL (harpertoken)",
-  "license": "KERNEL.METAL Non-Commercial License",
-  "spdx": "LicenseRef-KERNELMETAL-NC",
+  "license": "MIT License",
+  "spdx": "MIT",
   "repository": "https://github.com/harpertoken/kernel.metal"
 }

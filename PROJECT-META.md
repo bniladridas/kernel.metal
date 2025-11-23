@@ -6,8 +6,8 @@ This file serves as the single source of truth for project licensing, copyright,
 |------------|--------------------------------------------|
 | Name       | kernel.metal                               |
 | Copyright  | Copyright (c) 2025 KERNEL.METAL (harpertoken) |
-| License    | KERNEL.METAL Non-Commercial License        |
-| SPDX       | LicenseRef-KERNELMETAL-NC                  |
+| License    | MIT License                                |
+| SPDX       | MIT                                        |
 | Repository | https://github.com/harpertoken/kernel.metal |
 
 ## Usage

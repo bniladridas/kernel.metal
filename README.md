@@ -23,8 +23,10 @@ kernel void vector_add(
     device const float* A [[buffer(0)]],
     device const float* B [[buffer(1)]],
     device float* C [[buffer(2)]],
+    constant uint &count [[buffer(3)]],
     uint id [[thread_position_in_grid]]
 ) {
+    if (id >= count) return;
     C[id] = A[id] + B[id];
 }
 ```
@@ -38,10 +40,18 @@ Host Code (main.swift)
 Sample Output
 -------------
 ```
+Elapsed (s): 0.001
 Sample results:
 C[0] = 0.0
 C[1] = 3.0
+C[2] = 6.0
+C[3] = 9.0
+C[4] = 12.0
 ...
+C[999995] = 2999985.0
+C[999996] = 2999988.0
+C[999997] = 2999991.0
+C[999998] = 2999994.0
 C[999999] = 2999997.0
 ```
 
@@ -64,7 +74,7 @@ CI/CD
 - **CircleCI**: Runs validation on Ubuntu (file checks, actionlint).
 - **Local CI**: Use `act` for GitHub Actions simulation, `gitlab-ci-local` for GitLab CI, or CircleCI local CLI.
 
-Note: GitHub's hosted macOS runners are Intel-based and don't support Metal. Build/test are local or on GitLab. Lint and sync work on hosted runners.
+> **⚠️ Important:** GitHub's hosted macOS runners are Intel-based and do not support Metal compute shaders. Full build and test must be performed locally on Apple Silicon hardware or using dedicated macOS runners (e.g., via GitLab CI). Only linting and syncing run on GitHub's hosted runners.
 
 References
 ==========
@@ -73,20 +83,4 @@ References
 - [Metal Shading Language Guide](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf)
 - [GPU Compute Best Practices](https://developer.apple.com/documentation/metal/performing_calculations_on_a_gpu)
 
-## 📄 License & Usage FAQ
 
-**Can I use this software in my open source project?**  
-✔ Yes, as long as it is **non-commercial** and credit is maintained.
-
-**Can I modify the code for personal or academic use?**  
-✔ Yes — document any changes.
-
-**Can I publish a modified version on GitHub?**  
-✔ Yes, but still **non-commercial only** and must keep the license.
-
-**I want to use this in a product or service that earns money.**  
-➡ You must request commercial permission.  
-Create a **Commercial License Request** issue.
-
-**Does the author provide warranties?**  
-❌ No, the software is “as-is”.

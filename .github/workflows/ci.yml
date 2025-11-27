@@ -19,3 +19,17 @@ jobs:
         bash -c "$(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)"
     - name: Run actionlint
       run: ./actionlint .github/workflows/*.yml
+
+  commit-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Check commit messages
+      run: |
+        # Get commits in this push
+        commits=$(git rev-list ${{ github.event.before }}..${{ github.sha }} --no-merges)
+        for commit in $commits; do
+          git show --format=%B -s $commit | ./scripts/check-commit-msg.sh /dev/stdin
+        done

@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: LicenseRef-KERNELMETAL-NC
 # Copyright (c) 2025 KERNEL.METAL (harpertoken)
-
+---
 name: SPDX Compliance Bot
 
-on:
+'on':
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -54,28 +54,32 @@ jobs:
             const report = JSON.parse(process.env.REPORT || '{}')
             const { github, context } = require('@actions/github')
             const missing = report.missing || []
-            if (missing.length === 0) {
-              // Add success check
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.issue.number,
-                body: '✅ SPDX check passed — all changed files include the required license header.'
-              })
+             if (missing.length === 0) {
+               // Add success check
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.issue.number,
+                 body: '✅ SPDX check passed - all files have required header.'
+                })
             } else {
               // Label the PR
               await github.rest.issues.addLabels({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: context.issue.number,
-                labels: ['license:spdx-noncompliant']
+                 labels: ['license:spdx-noncompliant']
               }).catch(e => console.log('label error', e.message))
 
-              let body = '### ⚠ SPDX License Compliance Report\n\nThe following changed files are missing the license header. Suggested inline fixes have been added where possible.\n\n'
+               let body = '### ⚠ SPDX License Compliance Report\n\n'
+               body += 'The following changed files are missing the '
+               body += 'license header. Suggested inline fixes have been '
+               body += 'added where possible.\n\n'
               for (const item of missing) {
                 body += `- \`${item.file}\`\n`
-              }
-              body += '\n---\nClick the suggested fixes above to apply them and re-run CI.'
+                }
+               body += '\n---\n'
+               body += 'Click suggested fixes above to apply and re-run CI.'
 
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
@@ -88,23 +92,43 @@ jobs:
               for (const item of missing) {
                 try {
                   const path = item.file
-                  const suggestion = `// SPDX-License-Identifier: ${require('fs').readFileSync('project.meta.json','utf8') && JSON.parse(require('fs').readFileSync('project.meta.json','utf8')).spdx}\n// ${JSON.parse(require('fs').readFileSync('project.meta.json','utf8')).copyright}\n\n`
-                  await github.rest.pulls.createReview({
+                   const meta = JSON.parse(
+
+                     require('fs').readFileSync(
+
+                       'project.meta.json',
+
+                       'utf8'
+
+                     )
+
+                   )
+                    const suggestion =
+                      '// SPDX-License-Identifier: ' + meta.spdx +
+                      '\\n// ' + meta.copyright + '\\n\\n';
+                    await github.rest.pulls.createReview({
                     owner: context.repo.owner,
                     repo: context.repo.repo,
                     pull_number: context.issue.number,
                     body: `Suggested SPDX header for ${path}`,
                     event: 'COMMENT',
-                    comments: [
-                      {
+                      comments: [{
+                        path,
                         path,
                         side: 'RIGHT',
                         line: 1,
-                        body: `Suggestion:\n\n\`\`\`patch\n+ ${suggestion}\n\- (remove this line if it's not applicable)\n\`\`\``
+                         body: `
+                           Suggestion:
+
+                           \`\`\`patch
+                           + ${suggestion}
+                           - (remove this line if it's not applicable)
+                           \`\`\`
+                         `
                       }
                     ]
-                  })
-                } catch (e) {
+                    })
+                 } catch (e) {
                   console.log('review comment error', e.message)
                 }
               }

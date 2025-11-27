@@ -1,4 +1,6 @@
+# SPDX-License-Identifier: MIT
 # CircleCI config for KERNEL.METAL project
+---
 version: 2.1
 
 # Define Ubuntu executor for CI validation
@@ -12,22 +14,21 @@ jobs:
   validate:
     executor: ubuntu-executor
     steps:
-      # Checkout the code
       - checkout
-      # Run post-setup script after VM is ready
       - run:
           name: Post-setup
           command: ./post-setup.sh
-      # Check if key files exist
       - run:
           name: Check file existence
           command: |
             ls -la kernel.metal main.swift README.md
-      # Lint GitHub Actions workflows
       - run:
           name: Run actionlint
           command: |
-            curl -s https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash | bash
+            curl -s \
+              https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/ \
+              download-actionlint.bash \
+              | bash
             ./actionlint .github/workflows/*.yml
 
 # Workflow to run validation

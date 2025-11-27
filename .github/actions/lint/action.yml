@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: MIT
+---
+name: 'Lint'
+description: 'Run yamllint and actionlint'
+runs:
+  using: 'composite'
+  steps:
+    - name: Install yamllint
+      run: pip install yamllint
+      shell: bash
+    - name: Run yamllint
+      run: yamllint .
+      shell: bash
+    - name: Install actionlint
+      run: |
+        curl -s \
+          https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/\
+          download-actionlint.bash \
+          | bash
+      shell: bash
+    - name: Run actionlint
+      run: ./actionlint .github/workflows/*.yml
+      shell: bash

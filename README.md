@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT -->
+
 Metal Vector Addition Compute Kernel
 ========================================
 

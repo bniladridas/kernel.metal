@@ -1,9 +1,10 @@
+---
 # SPDX-License-Identifier: LicenseRef-KERNELMETAL-NC
 # Copyright (c) 2025 KERNEL.METAL (harpertoken)
 
 name: SPDX Auto Fix (manual)
 
-on:
+'on':
   workflow_dispatch:
     inputs:
       runOnBranch:

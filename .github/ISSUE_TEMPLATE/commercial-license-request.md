@@ -6,6 +6,8 @@ labels: commercial
 assignees: harpertoken
 ---
 
+<!-- SPDX-License-Identifier: MIT -->
+
 ## Company / Individual Name
 <Enter legal name>
 

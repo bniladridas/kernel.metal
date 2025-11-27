@@ -1,7 +1,10 @@
+# SPDX-License-Identifier: MIT
+---
+
 labels:
   - name: license:spdx-noncompliant
     color: FF0000
-    description: "Files changed in PR are missing SPDX headers or copyright lines"
+    description: "Files changed in PR are missing SPDX headers or copyright"
   - name: license:spdx-fixed
     color: 0E8A16
     description: "SPDX issues fixed"

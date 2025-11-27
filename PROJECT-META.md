@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT -->
+
 # Project Metadata
 
 This file serves as the single source of truth for project licensing, copyright, and SPDX information.

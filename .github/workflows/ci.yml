@@ -1,35 +1,33 @@
-# SPDX-License-Identifier: LicenseRef-KERNELMETAL-NC
-# Copyright (c) 2025 KERNEL.METAL (harpertoken)
-
+---
 name: CI
 
-on:
+'on':
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Install actionlint
-      run: |
-        bash -c "$(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)"
-    - name: Run actionlint
-      run: ./actionlint .github/workflows/*.yml
-
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/lint
   commit-check:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-    - name: Check commit messages
-      run: |
-        # Get commits in this push
-        commits=$(git rev-list ${{ github.event.before }}..${{ github.sha }} --no-merges)
-        for commit in $commits; do
-          git show --format=%B -s $commit | ./scripts/check-commit-msg.sh /dev/stdin
-        done
+      -
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check commit messages
+        run: |
+          # Get commits in this push
+          BEFORE=${{ github.event.before }}
+          SHA=${{ github.sha }}
+          while IFS= read -r commit; do
+            git show --format=%B -s "$commit" | \
+              ./scripts/check-commit-msg.sh /dev/stdin
+          done < <(git rev-list "$BEFORE".."$SHA" --no-merges)

@@ -1,11 +1,11 @@
 # SPDX-License-Identifier: LicenseRef-KERNELMETAL-NC
 # Copyright (c) 2025 KERNEL.METAL (harpertoken)
-
+---
 name: SPDX Header Check
 
-on:
+'on':
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
 
 jobs:
   validate-spdx:
@@ -20,27 +20,31 @@ jobs:
         run: |
           # Load SPDX ID from source of truth
           SPDX_ID=$(jq -r .spdx project.meta.json)
-          FILE_TYPES="*.ts *.tsx *.js *.jsx *.py *.cpp *.c *.h *.sh *.go *.rs *.java *.rb"
-          CHANGED_FILES=$(git diff --name-only HEAD^ | grep -E "${FILE_TYPES// /|}" || true)
-          
+          FILE_TYPES="*.ts *.tsx *.js *.jsx *.py *.cpp *.c *.h"
+          FILE_TYPES="$FILE_TYPES *.sh *.go *.rs *.java *.rb"
+          PATTERN=$(echo "$FILE_TYPES" | tr ' ' '|')
+           CHANGED_FILES=$(git diff --name-only HEAD^)
+           CHANGED_FILES=$(echo "$CHANGED_FILES" | \
+             grep -E "$PATTERN" || true)
           if [ -z "$CHANGED_FILES" ]; then
+
             echo "No relevant files changed."
+
             exit 0
+
           fi
-          
           echo "Checking SPDX headers in changed files:"
           echo "$CHANGED_FILES"
-          
           MISSING=""
-          for file in $CHANGED_FILES; do
-            if ! grep -q "SPDX-License-Identifier: $SPDX_ID" "$file"; then
-              MISSING="$MISSING\n$file"
-            fi
+          for file in $CHANGED_FILES; do \
+            if ! grep -q "SPDX-License-Identifier: $SPDX_ID" "$file"; then \
+              MISSING="$MISSING\n$file"; \
+            fi; \
           done
-          
-          if [ -n "$MISSING" ]; then
-            echo -e "❌ The following files are missing SPDX headers: $MISSING"
-            exit 1
-          else
-            echo "✔ All changed files include SPDX headers."
-          fi
+          if [ -n "$MISSING" ]; then \
+            echo -e "❌ The following files are missing SPDX headers:"; \
+            echo "$MISSING"; \
+            exit 1; \
+          else \
+             echo "✔ All changed files include SPDX headers."; \
+           fi

@@ -12,10 +12,7 @@ runs:
       run: yamllint .
       shell: bash
     - name: Install actionlint
-      run: |
-        URL="https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/ \
-          download-actionlint.bash"
-        curl -s "$URL" | bash
+      run: curl -s https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash | bash
       shell: bash
     - name: Run actionlint
       run: ./actionlint .github/workflows/*.yml

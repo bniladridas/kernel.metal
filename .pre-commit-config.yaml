@@ -13,10 +13,6 @@ repos:
     rev: v1.6.26
     hooks:
       - id: actionlint
-  - repo: https://github.com/realm/SwiftLint
-    rev: 0.54.0
-    hooks:
-      - id: swiftlint
   - repo: local
     hooks:
       - id: commit-msg-check
